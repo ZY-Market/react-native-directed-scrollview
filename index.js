@@ -39,13 +39,17 @@ const ScrollView = createReactClass({
     this._scrollViewRef = ref;
   },
   componentDidMount: function() {
-    setTimeout(() => {
-      this.zoomToStart({animated: false});
+    const timerId = setTimeout(() => {
+      this.zoomToStart({ animated: false });
     }, 0);
+    this.componentWillUnmount = () => {
+      // Closure timerId in this way, because for some reason, it clears in variable before componentWillUnmount.
+      clearTimeout(timerId);
+    };
   },
   render: function() {
     return (
-      <NativeScrollView 
+      <NativeScrollView
         {...this.props}
         ref={this._setScrollViewRef}
         onScrollBeginDrag={this.scrollResponderHandleScrollBeginDrag}
